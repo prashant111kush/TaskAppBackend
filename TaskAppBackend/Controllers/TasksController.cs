@@ -3,38 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using TaskCore.Services;
+using TaskAppBackend.Models;
+using TaskAppBackend.Services;
 
 namespace TaskAppBackend.Controllers
 {
     [Route("api/[controller]")]
     public class TasksController : Controller
     {
-        private readonly ITaskRepositoryService _taskRepositoryService;
-        public TasksController(ITaskRepositoryService taskRepositoryService)
+        private readonly TaskSevice _taskSevice;
+        public TasksController(TaskSevice taskService)
         {
-            _taskRepositoryService = taskRepositoryService;
+            _taskSevice = taskService;
         }
 
-        // GET api/values
+        // GET api/tasks
         [HttpGet]
         public IActionResult Get()
         {
-            var taskList = _taskRepositoryService.GetAllTasks();
+            var taskList = _taskSevice.GetAllTasks();
             return Ok(taskList);
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/tasks/id
+        [HttpGet("{id}", Name = "GetTask")]
+        public IActionResult Get(Guid id)
         {
-            return "value";
+            var task = _taskSevice.GetTask(id);
+            if (task == null)
+            {
+                return NotFound($"task with id: {id} not found");
+            }
+            return Ok(task);
         }
 
-        // POST api/values
+        // POST api/tasks
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]TaskCreateModel task)
         {
+            if (task == null)
+            {
+                return BadRequest();
+            }
+
+            var createdTask = _taskSevice.CreateTask(task.TaskName, task.TaskDescription, task.TaskDateTime,
+                task.TaskPriority);
+
+            return CreatedAtRoute("GetTask", new { id = createdTask.TaskId }, createdTask);
         }
 
         // PUT api/values/5

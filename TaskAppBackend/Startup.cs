@@ -9,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Serialization;
+using TaskAppBackend.Models;
+using TaskAppBackend.Services;
 using TaskCore.Services;
 using TaskRepository.Services;
 
@@ -26,9 +29,22 @@ namespace TaskAppBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-                .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
+            services.AddMvc();
+
+            // change the naming strategy of the property returned in json
+            //    .AddJsonOptions(o =>
+            //{
+            //    if (o.SerializerSettings.ContractResolver != null)
+            //    {
+            //        var castedResolver = o.SerializerSettings.ContractResolver as DefaultContractResolver;
+            //        castedResolver.NamingStrategy = null;
+            //    }
+            //});
+
+            //.AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
+            
             services.AddTransient<ITaskRepositoryService, TaskRepositoryService>();
+            services.AddTransient<TaskSevice, TaskSevice>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

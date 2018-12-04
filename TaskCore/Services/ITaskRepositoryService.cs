@@ -8,5 +8,7 @@ namespace TaskCore.Services
     public interface ITaskRepositoryService
     {
         List<CoreTask> GetAllTasks();
+        CoreTask SaveTask(string taskName, string taskDescription, DateTime taskDateTime, int taskPriority);
+        CoreTask GetTask(Guid taskId);
     }
 }

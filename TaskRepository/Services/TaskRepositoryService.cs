@@ -8,10 +8,23 @@ namespace TaskRepository.Services
 {
     public class TaskRepositoryService : ITaskRepositoryService
     {
+        private readonly TaskDataStore _dataStore = TaskDataStore.GetTaskDataStore;
         public List<CoreTask> GetAllTasks()
         {
-            var datastore = new TaskDataStore();
-            return datastore.TaskList;
+            return _dataStore.TaskList;
+        }
+
+        public CoreTask SaveTask(string taskName, string taskDescription, DateTime taskDateTime, int taskPriority)
+        {
+            var coreTask = new CoreTask(taskId: Guid.NewGuid(), taskDateTime: taskDateTime, taskDescription: taskDescription, taskPriority: taskPriority, taskName: taskName);
+            _dataStore.AddTask(coreTask);
+            return coreTask;
+        }
+
+        public CoreTask GetTask(Guid taskId)
+        {
+           var coreTask =  _dataStore.GetTask(taskId);
+            return coreTask;
         }
     }
 }
