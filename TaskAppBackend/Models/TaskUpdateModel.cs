@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
 
 namespace TaskAppBackend.Models
 {
-    public class TaskCreateModel
+    public class TaskUpdateModel
     {
         [Required(ErrorMessage = "The name should not be more than 50 characters and less than 5 characters.")]
         [MaxLength(50)]
@@ -26,4 +25,3 @@ namespace TaskAppBackend.Models
         public int TaskPriority { get; set; }
     }
 }
-

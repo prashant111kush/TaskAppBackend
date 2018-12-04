@@ -10,5 +10,7 @@ namespace TaskCore.Services
         List<CoreTask> GetAllTasks();
         CoreTask SaveTask(string taskName, string taskDescription, DateTime taskDateTime, int taskPriority);
         CoreTask GetTask(Guid taskId);
+        CoreTask UpdateTask(Guid taskId, string taskName, string taskDescription, DateTime taskDateTime, int taskPriority);
+        void DeleteTask(Guid taskId);
     }
 }

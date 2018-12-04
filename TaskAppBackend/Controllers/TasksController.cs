@@ -59,14 +59,49 @@ namespace TaskAppBackend.Controllers
 
         // PUT api/tasks/id
         [HttpPut("{id}")]
-        public void UpdateTask(Guid id, [FromBody]string value)
+        public IActionResult UpdateTask(Guid id, [FromBody]TaskUpdateModel task)
         {
+            if (task == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingTask = _taskSevice.GetTask(id);
+
+            if (existingTask == null)
+            {
+                return NotFound($"The task with id : {id} was not found.");
+            }
+
+            _taskSevice.UpdateTask(id, task.TaskName, task.TaskDescription, task.TaskDateTime,task.TaskPriority);
+
+            return NoContent();
         }
 
         // DELETE api/tasks/id
         [HttpDelete("{id}")]
-        public void DeleteTask(Guid id)
+        public IActionResult DeleteTask(Guid id)
         {
+            if (id == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+            var existingTask = _taskSevice.GetTask(id);
+
+            if (existingTask == null)
+            {
+                return NotFound($"The task with id : {id} was not found.");
+            }
+
+            _taskSevice.DeleteTask(id);
+
+            return NoContent();
         }
     }
 }

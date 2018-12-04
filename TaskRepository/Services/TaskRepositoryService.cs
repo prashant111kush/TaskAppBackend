@@ -23,8 +23,20 @@ namespace TaskRepository.Services
 
         public CoreTask GetTask(Guid taskId)
         {
-           var coreTask =  _dataStore.GetTask(taskId);
+            var coreTask =  _dataStore.GetTask(taskId);
             return coreTask;
+        }
+
+        public CoreTask UpdateTask(Guid taskId, string taskName, string taskDescription, DateTime taskDateTime, int taskPriority)
+        {
+            var coreTask = new CoreTask(taskId: taskId, taskDateTime: taskDateTime, taskDescription: taskDescription, taskPriority: taskPriority, taskName: taskName);
+            var updatedTask = _dataStore.UpdateTask(coreTask);
+            return updatedTask;
+        }
+
+        public void DeleteTask(Guid taskId)
+        {
+            _dataStore.DeleteTask(taskId);
         }
     }
 }

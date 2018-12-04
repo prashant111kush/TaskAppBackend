@@ -55,5 +55,18 @@ namespace TaskRepository
            var coreTask =  taskDataStore.TaskList.SingleOrDefault(t => t.TaskId == taskId);
             return coreTask;
         }
+
+        internal CoreTask UpdateTask(CoreTask coreTask)
+        {
+            taskDataStore.TaskList.RemoveAll(t => t.TaskId == coreTask.TaskId);
+            taskDataStore.AddTask(coreTask);
+            var updatedTask = GetTask(coreTask.TaskId);
+            return updatedTask;
+        }
+
+        internal void DeleteTask(Guid taskId)
+        {
+            taskDataStore.TaskList.RemoveAll(t => t.TaskId == taskId);
+        }
     }
 }

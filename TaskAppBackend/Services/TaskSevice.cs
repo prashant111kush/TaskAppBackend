@@ -23,19 +23,9 @@ namespace TaskAppBackend.Services
             return taskModelList;
         }
 
-        public  TaskViewModel CreateTask(string taskName, string taskDescription, DateTime? taskDateTime, int taskPriority )
+        public  TaskViewModel CreateTask(string taskName, string taskDescription, DateTime taskDateTime, int taskPriority )
         {
-            DateTime coreTaskDateTime;
-            if (taskDateTime == null)
-            {
-                coreTaskDateTime = DateTime.UtcNow;
-            }
-            else
-            {
-                coreTaskDateTime = taskDateTime.Value;
-            }
-
-            var coreTask = _taskRepositoryService.SaveTask(taskName, taskDescription, coreTaskDateTime, taskPriority);
+            var coreTask = _taskRepositoryService.SaveTask(taskName, taskDescription, taskDateTime, taskPriority);
             var taskModel = ConvertCoreTaskToTaskModel.ConvertToTaskModel(coreTask);
             return taskModel;
         }
@@ -45,6 +35,19 @@ namespace TaskAppBackend.Services
             var coreTask = _taskRepositoryService.GetTask(taskId);
             var taskModel = ConvertCoreTaskToTaskModel.ConvertToTaskModel(coreTask);
             return taskModel;
+        }
+
+        public TaskViewModel UpdateTask(Guid taskId, string taskName, string taskDescription, DateTime taskDateTime, int taskPriority)
+        {
+            var updatedCoreTask = _taskRepositoryService.UpdateTask(taskId, taskName, taskDescription, taskDateTime, taskPriority);
+            var taskModel = ConvertCoreTaskToTaskModel.ConvertToTaskModel(updatedCoreTask);
+            return taskModel;
+
+        }
+
+        public void DeleteTask(Guid taskId)
+        {
+            _taskRepositoryService.DeleteTask(taskId);
         }
     }
 }
