@@ -19,7 +19,7 @@ namespace TaskAppBackend.Controllers
 
         // GET api/tasks
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult GetAllTasks()
         {
             var taskList = _taskSevice.GetAllTasks();
             return Ok(taskList);
@@ -27,7 +27,7 @@ namespace TaskAppBackend.Controllers
 
         // GET api/tasks/id
         [HttpGet("{id}", Name = "GetTask")]
-        public IActionResult Get(Guid id)
+        public IActionResult GetTask(Guid id)
         {
             var task = _taskSevice.GetTask(id);
             if (task == null)
@@ -39,11 +39,16 @@ namespace TaskAppBackend.Controllers
 
         // POST api/tasks
         [HttpPost]
-        public IActionResult Post([FromBody]TaskCreateModel task)
+        public IActionResult CreateTask([FromBody]TaskCreateModel task)
         {
             if (task == null)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
             var createdTask = _taskSevice.CreateTask(task.TaskName, task.TaskDescription, task.TaskDateTime,
@@ -52,15 +57,15 @@ namespace TaskAppBackend.Controllers
             return CreatedAtRoute("GetTask", new { id = createdTask.TaskId }, createdTask);
         }
 
-        // PUT api/values/5
+        // PUT api/tasks/id
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void UpdateTask(Guid id, [FromBody]string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE api/tasks/id
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void DeleteTask(Guid id)
         {
         }
     }
