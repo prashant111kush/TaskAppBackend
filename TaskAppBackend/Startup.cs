@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.Swagger;
 using TaskAppBackend.Models;
 using TaskCore;
 using TaskCore.Services;
@@ -30,21 +31,20 @@ namespace TaskAppBackend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
-            // change the naming strategy of the property returned in json
-            //    .AddJsonOptions(o =>
-            //{
-            //    if (o.SerializerSettings.ContractResolver != null)
-            //    {
-            //        var castedResolver = o.SerializerSettings.ContractResolver as DefaultContractResolver;
-            //        castedResolver.NamingStrategy = null;
-            //    }
-            //});
-
-            //.AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
-            
             services.AddTransient<ITaskRepositoryService, TaskRepositoryService>();
             services.AddTransient<ITaskService, TaskSevice>();
+
+            // Add support for swagger
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Task API",
+                    Description = "ASP.NET Core Web API",
+                    TermsOfService = "None",
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +56,13 @@ namespace TaskAppBackend
             }
 
             app.UseMvc();
+
+            // enable swagger 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task API V1");
+            });
         }
     }
 }

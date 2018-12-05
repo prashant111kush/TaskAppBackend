@@ -35,7 +35,6 @@ namespace TaskCore
         {
             var updatedCoreTask = _taskRepositoryService.UpdateTask(taskId, taskName, taskDescription, taskDateTime, taskPriority);
             return updatedCoreTask;
-
         }
 
         public void DeleteTask(Guid taskId)
