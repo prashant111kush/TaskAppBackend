@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
 using TaskAppBackend.Models;
-using TaskAppBackend.Services;
+using TaskCore;
 using TaskCore.Services;
 using TaskRepository.Services;
 
@@ -44,7 +44,7 @@ namespace TaskAppBackend
             //.AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
             
             services.AddTransient<ITaskRepositoryService, TaskRepositoryService>();
-            services.AddTransient<TaskSevice, TaskSevice>();
+            services.AddTransient<ITaskService, TaskSevice>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TaskAppBackend.Converters;
 using TaskAppBackend.Models;
-using TaskAppBackend.Services;
+using TaskCore;
+using TaskCore.Services;
 
 namespace TaskAppBackend.Controllers
 {
     [Route("api/[controller]")]
     public class TasksController : Controller
     {
-        private readonly TaskSevice _taskSevice;
-        public TasksController(TaskSevice taskService)
+        private readonly ITaskService _taskSevice;
+        public TasksController(ITaskService taskService)
         {
             _taskSevice = taskService;
         }
@@ -22,7 +24,8 @@ namespace TaskAppBackend.Controllers
         public IActionResult GetAllTasks()
         {
             var taskList = _taskSevice.GetAllTasks();
-            return Ok(taskList);
+            var taskModelList = taskList.Select(ConvertCoreTaskToTaskModel.ConvertToTaskModel);
+            return Ok(taskModelList);
         }
 
         // GET api/tasks/id
@@ -30,11 +33,12 @@ namespace TaskAppBackend.Controllers
         public IActionResult GetTask(Guid id)
         {
             var task = _taskSevice.GetTask(id);
-            if (task == null)
+            var taskModel = ConvertCoreTaskToTaskModel.ConvertToTaskModel(task);
+            if (taskModel == null)
             {
                 return NotFound($"task with id: {id} not found");
             }
-            return Ok(task);
+            return Ok(taskModel);
         }
 
         // POST api/tasks
@@ -54,7 +58,9 @@ namespace TaskAppBackend.Controllers
             var createdTask = _taskSevice.CreateTask(task.TaskName, task.TaskDescription, task.TaskDateTime,
                 task.TaskPriority);
 
-            return CreatedAtRoute("GetTask", new { id = createdTask.TaskId }, createdTask);
+            var createdTaskModel = ConvertCoreTaskToTaskModel.ConvertToTaskModel(createdTask);
+
+            return CreatedAtRoute("GetTask", new { id = createdTaskModel.TaskId }, createdTaskModel);
         }
 
         // PUT api/tasks/id
