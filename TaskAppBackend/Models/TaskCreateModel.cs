@@ -9,8 +9,8 @@ namespace TaskAppBackend.Models
 {
     public class TaskCreateModel
     {
-        [Required(ErrorMessage = "The name should not be more than 50 characters and less than 5 characters.")]
-        [MaxLength(50)]
+        [Required(ErrorMessage = "The name should not be more than 40 characters and less than 5 characters.")]
+        [MaxLength(40)]
         [MinLength(5)]
         public string TaskName { get; set; }
 
